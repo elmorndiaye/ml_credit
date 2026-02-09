@@ -298,7 +298,7 @@ def show_analytics():
         st.metric("Total Prêts", f"{len(df):,}", delta=f"{len(df)//10} ce mois")
     
     with col2:
-        taux_defaut = (df['statut_pret'].sum() / len(df) * 100)
+        taux_defaut = (df['loan_status'].sum() / len(df) * 100)
         st.metric("Taux de Défaut", f"{taux_defaut:.1f}%", delta=f"{taux_defaut-30:.1f}%", delta_color="inverse")
     
     with col3:
@@ -488,3 +488,4 @@ def show_analytics():
 
 if __name__ == "__main__":
     main()
+
