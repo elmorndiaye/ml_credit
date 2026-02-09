@@ -91,7 +91,7 @@ def load_data():
     try:
         # Essayer différents noms de fichiers de données
         import os
-        possible_files = ['credit_data.csv', 'credit_risk_dataset (1).csv', 'credit_risk_dataset.csv']
+        possible_files = [ 'credit_risk_dataset (1).csv']
         for file in possible_files:
             if os.path.exists(file):
                 df = pd.read_csv(file)
@@ -312,6 +312,23 @@ def show_analytics():
     with col5:
         taux_moyen = df['taux_interet'].mean()
         st.metric("Taux Moyen", f"{taux_moyen:.1f}%", delta="-0.3%", delta_color="inverse")
+
+
+    df = df.rename(columns={
+    "person_age": "age_client",
+    "person_income": "revenu_annuel",
+    "person_home_ownership": "type_logement",
+    "person_emp_length": "anciennete_emploi",
+    "loan_intent": "motif_pret",
+    "loan_grade": "note_credit",
+    "loan_amnt": "montant_pret",
+    "loan_int_rate": "taux_interet",
+    "loan_status": "statut_pret",
+    "loan_percent_income": "ratio_revenu_pret",
+    "cb_person_default_on_file": "defaut_dans_historique",
+    "cb_person_cred_hist_length": "anciennete_historique_credit"
+})
+
     
     st.markdown("---")
     
@@ -488,4 +505,5 @@ def show_analytics():
 
 if __name__ == "__main__":
     main()
+
 
