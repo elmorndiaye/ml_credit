@@ -266,34 +266,51 @@ def show_analytics():
 
     # =====================================================
     # TAB 4 SEGMENTATION KMEANS
-    # =====================================================
     with tab4:
 
-        from sklearn.cluster import KMeans
-        from sklearn.preprocessing import StandardScaler
+    from sklearn.cluster import KMeans
+    from sklearn.preprocessing import StandardScaler
 
-        X = df[["age_client", "revenu_annuel",
-                "montant_pret", "taux_interet"]]
+    features = ["age_client", "revenu_annuel", "montant_pret", "taux_interet"]
 
-        scaler = StandardScaler()
-        Xs = scaler.fit_transform(X)
+    X = df[features].copy()
 
-        kmeans = KMeans(n_clusters=3, random_state=0)
-        df["cluster"] = kmeans.fit_predict(Xs)
+    # =================================
+    # NETTOYAGE ANTI-CRASH
+    # =================================
+    X = X.replace([np.inf, -np.inf], np.nan)
+    X = X.fillna(X.median())   # super robuste pour finance
 
-        fig = px.scatter(
-            df,
-            x="revenu_annuel",
-            y="montant_pret",
-            color="cluster",
-            size="taux_interet"
-        )
-        st.plotly_chart(fig, use_container_width=True)
+    # =================================
+    # SCALING
+    # =================================
+    scaler = StandardScaler()
+    Xs = scaler.fit_transform(X)
 
-        st.write("Clusters clients détectés automatiquement (Low / Medium / High risk)")
+    # =================================
+    # KMEANS SAFE
+    # =================================
+    kmeans = KMeans(n_clusters=3, random_state=42, n_init=10)
+    clusters = kmeans.fit_predict(Xs)
 
-    st.divider()
-    st.dataframe(df.head(200))
+    df["cluster"] = clusters
+
+    # =================================
+    # VISUALISATION
+    # =================================
+    fig = px.scatter(
+        df,
+        x="revenu_annuel",
+        y="montant_pret",
+        color="cluster",
+        size="taux_interet",
+        hover_data=["age_client"]
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.success("✅ Segmentation clients réussie (aucun NaN)")
+
 
 
 
@@ -319,4 +336,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
