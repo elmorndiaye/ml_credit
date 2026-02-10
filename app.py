@@ -25,7 +25,7 @@ st.set_page_config(
 def load_model():
     import os
 
-    for f in ["modele_final.pkl", "model.pkl", "credit_model.pkl"]:
+    for f in ["modele_final.pkl", "model.pkl", "model_final.pkl"]:
         if os.path.exists(f):
             with open(f, "rb") as file:
                 return pickle.load(file)
@@ -319,3 +319,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
